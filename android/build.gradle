@@ -1,21 +1,60 @@
-buildscript {
-    ext {
-        buildToolsVersion = "34.0.0"
-        minSdkVersion = 23
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-        ndkVersion = "26.1.10909125"
-        kotlinVersion = "1.9.24"
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+
+// Android configuration block
+android {
+    compileSdkVersion 33 // Adjust to your desired SDK version
+    ndkVersion rootProject.ext.ndkVersion // Ensure this is defined in your root build.gradle
+    buildToolsVersion "33.0.0" // Adjust to your desired build tools version
+
+    namespace "com.frontend" // Ensure this matches your package name
+
+    defaultConfig {
+        applicationId "com.frontend"
+        minSdkVersion 21 // Set according to your needs
+        targetSdkVersion 33 // Set according to your needs
+        versionCode 1
+        versionName "1.0"
     }
-    repositories {
-        google()
-        mavenCentral()
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
     }
-    dependencies {
-        classpath("com.android.tools.build:gradle")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.debug // Change for production
+            minifyEnabled false // Set to true if using ProGuard
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
     }
 }
 
-apply plugin: "com.facebook.react.rootproject"
+// Dependencies
+dependencies {
+    classpath 'com.android.tools.build:gradle:8.8'
+    implementation("com.facebook.react:react-android:8.8")
+
+    // Add Hermes support if enabled
+    if (project.ext.hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android:8.8")
+    } else {
+        implementation "org.webkit:android-jsc:+" // Or specify a version
+    }
+
+    // Add any additional dependencies here
+}
+
+repositories {
+    google()
+    mavenCentral()
+}

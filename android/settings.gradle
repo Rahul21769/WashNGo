@@ -1,6 +1,11 @@
-pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
-plugins { id("com.facebook.react.settings") }
-extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+pluginManagement {
+    includeBuild("../node_modules/@react-native/gradle-plugin")
+}
+
+plugins {
+    id("com.android.application") version "8.8" apply false
+    id("com.facebook.react.settings") version "0.15.0" // Ensure this is correct
+}
+
 rootProject.name = 'frontend'
 include ':app'
-includeBuild('../node_modules/@react-native/gradle-plugin')
